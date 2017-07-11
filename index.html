@@ -3,14 +3,19 @@
 	<head>
 		<title>Calendar</title>
 		<script type="text/javascript" src="script.js"></script>
+		<link rel="stylesheet" href="style.css">
 	</head>
 	<body>
-		<table border="1">
-			<thead>
-				<select id="months"></select>
-				<select id="years"></select>
-				<button type="button">Previous</button>
-				<button type="button">Next</button>
+		<table border="1" class="calendar">
+			<thead id="tableHead">
+				<div class="controls">
+					Jump to:
+					<select id="months" name="Jump to a specific month"></select>
+					<select id="years" name="Jump to a specific year"></select>
+					<button type="button" id="prev">Previous</button>
+					<button type="button" id="next">Next</button>
+				</div>
+				<h3 id="calTitle"></h3>
 			</thead>
 			<tbody id="tableBody">
 

@@ -1,14 +1,13 @@
 window.onload = function () {
 	initMonths();
 	createYears();
-	initPrevButton();
-// 	listenMonths();
+	initButtons();
 	var cal = new Calendar(currentMonth, currentYear);
 	listenMonths();
+	listenYears();
 	cal.generateHTML();
 	cal.fillTheRows();
-	
-	
+	showMonthAndYear();
 }
 
 
@@ -32,38 +31,24 @@ function initMonths() {
 	MONTHS.forEach(function(current, index, arr) {
 		let option = document.createElement('option');
 		option.setAttribute('value', index);
+		option.setAttribute('id', 'month' + index);
 		option.innerHTML = current;
+		select.appendChild(option);
 		
 		if (index === currentMonth) {
 			option.setAttribute('selected', 'selected');
 		}
-
-		select.appendChild(option);
 	});
 }
 
-// Months event listener
+// Months' event listener
 function listenMonths() {
-	let select = document.getElementById('months');//('select')[0]; //getElementById('months');
-/*
-	select.onchange = changeEventHandler('change');
-	
-	function changeEventHandler(event) {
-		currentMonth = this.value; // event.target.value;
-	}
-*/
-	console.log(select);
+	let select = document.getElementById('months');
 	select.addEventListener('change', function() {
-		currentMonth = this.value;
-		let cal = new Calendar(currentMonth, currentYear);
-		cal.clearRows();
-		cal.fillTheRows();
-	})
-	
-	
+		currentMonth = +this.value;
+		showCal();
+	});
 }
-
-
 
 function createYears() {
 	let select = document.getElementsByTagName('select')[1];
@@ -71,6 +56,7 @@ function createYears() {
 	for (var i = START_YEAR; i <= END_YEAR; i++) {
 		let option = document.createElement('option');
 		option.setAttribute('value', i);
+		option.setAttribute('id', 'year' + i);
 		option.innerHTML = i;
 		
 		if (i === currentYear) {
@@ -81,17 +67,55 @@ function createYears() {
 	}
 }
 
-function initPrevButton() {
-	let prevButton = document.getElementsByTagName('button')[0];
-
-	prevButton.addEventListener('click', function(index) {
-		MONTHS[index] = MONTHS[index - 1];
+//Years' event listener
+function listenYears() {
+	let select = document.getElementById('years');
+	select.addEventListener('change', function() {
+		currentYear = this.value;
+		showCal();
 	});
+}
+
+function initButtons() {
+	let prevButton = document.getElementById('prev');
+
+	prevButton.addEventListener('click', function() {
+		let opt = document.getElementById('month' + currentMonth);
+		
+		if (currentMonth != 0) {
+			currentMonth -= 1;
+		}
+		showCal();
+	});
+
+	let nextButton = document.getElementById('next');
+	
+	nextButton.addEventListener('click', function() {
+		let opt = document.getElementById('month' + currentMonth);
+		
+		if (currentMonth != 11) {
+			currentMonth += 1;
+		}
+		showCal();
+	});
+}
+
+function showMonthAndYear() {
+	let heading = document.getElementById('calTitle');
+	heading.innerHTML = `${MONTHS[currentMonth]} ${currentYear}`;
 }
 
 
 
+
 // body
+
+function showCal() {
+	var cal = new Calendar(currentMonth, currentYear);
+	cal.clearRows();
+	cal.fillTheRows();
+	showMonthAndYear();
+}
 
 function Calendar(month, year) {
 	this.month = (isNaN(month) || month == null) ? currentDate.getMonth() : month;
@@ -100,13 +124,12 @@ function Calendar(month, year) {
 	let firstDay = new Date(year, month, 0);
 	let startingDay = firstDay.getDay();
 	let monthLength = MONTHS_DURATIONS[month];
+	
+	
 		
 	this.generateHTML = function() {
-		if (this.month == 1) {
-			if (this.year % 4 === 0 && this.year % 100 != 0 || this.year % 400 === 0) {
-				monthLength = 29;
-			}
-		}
+		
+		
 		
 		function getWeekdayNames() {
 			let createRow = document.createElement('tr');
@@ -147,6 +170,13 @@ function Calendar(month, year) {
 	this.fillTheRows = function() {
 		let day = 1;
 		
+		//leap year fix
+		if (this.month == 1) {
+			if (this.year % 4 === 0 && this.year % 100 != 0 || this.year % 400 === 0) {
+				monthLength = 29;
+			}
+		}
+		
 		//rows
 		let condition = (startingDay >= 4) ? 6 : 5;
 		for (let i = 0; i < condition; i++) {
@@ -173,13 +203,14 @@ function Calendar(month, year) {
 					let currentCell = document.getElementById('cell' + i + j);
 					currentCell.innerHTML = day;
 					if (day === monthLength && currentRow.nextSibling) {
-						currentRow.nextSibling.remove();						
+						currentRow.nextSibling.remove();
+						return;						
 					}
 					day++;
 				}
 				
 				if (day > monthLength) {
-					break;
+					return;
 				}
 			}
 		}
