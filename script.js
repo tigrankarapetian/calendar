@@ -128,9 +128,6 @@ function Calendar(month, year) {
 	
 		
 	this.generateHTML = function() {
-		
-		
-		
 		function getWeekdayNames() {
 			let createRow = document.createElement('tr');
 			createRow.setAttribute('id', 'weekdayNames');
@@ -181,7 +178,7 @@ function Calendar(month, year) {
 		let condition = (startingDay >= 4) ? 6 : 5;
 		for (let i = 0; i < condition; i++) {
 			
-			if (i === 5  && !document.getElementById('row' + i)) {
+			if (i === 5 && !document.getElementById('row' + i)) {
 				let sundayOfThe5thWeek = document.getElementById('cell' + 4 + 6);
 				if (sundayOfThe5thWeek.innerHTML < monthLength) {
 					let createRow = document.createElement('tr');
@@ -200,6 +197,9 @@ function Calendar(month, year) {
 			for (j; j <= 6; j++) {
 				if (day <= monthLength) {
 					let currentRow = document.getElementById('row' + i);
+					if (!currentRow) {
+						fixMissingRow(i);
+					}
 					let currentCell = document.getElementById('cell' + i + j);
 					currentCell.innerHTML = day;
 					if (day === monthLength && currentRow.nextSibling) {
@@ -212,6 +212,19 @@ function Calendar(month, year) {
 				if (day > monthLength) {
 					return;
 				}
+			}
+			
+			function fixMissingRow(index) {
+				let addRow = document.createElement('tr');
+				addRow.setAttribute('id', 'row' + index);
+				for (let j = 0; j <= 6; j++) { 
+					let createCell = document.createElement('td');
+					createCell.setAttribute('id', 'cell' + index + j);
+					addRow.appendChild(createCell);
+				}
+				let tableBody = document.getElementById('tableBody');
+				tableBody.appendChild(addRow);
+				
 			}
 		}
 	}

@@ -1,12 +1,46 @@
 body, html {
 	height: 100%;
+	background-image: url(resources/background.png);
+	font-family: sans-serif;	
+	color: white;
 }
 .controls {
 	float: right;
+	width: 50%;
 }
 
 .calendar {
 	height: 75%;
 	width: 100%;
 	text-align: center;
+	border-style: solid;
+	border-color: white;
+}
+
+td {
+	width: 14.3%;
+	font-size: larger;
+	border-width: 1px;
+	border-style: solid;
+	border-spacing: 10px;
+	border-color: white;
+}
+
+button {
+	width: 15%;
+	border: none;
+	border-radius: 4px;
+	background-color: white;
+    color: #3092ed;
+    font-size: inherit;
+    
+}
+
+select {
+	width: 25%;
+	border: none;
+	border-radius: 4px;
+	background-color: white;
+    color: #3092ed;
+    font-size: inherit;
 }
